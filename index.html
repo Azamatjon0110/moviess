@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/main.css">
+  <title>Movies</title>
+</head>
+<body class="text-bg-dark">
+
+  <div class="container py-5">
+    <div class="box w-100 d-flex justify-content-between align-items-center flex-column flex-md-row mb-5">
+      <h2 class="d-block">Movies</h2>
+      <div class="input-group">
+        <input class="form-control" type="text" placeholder="Searching">
+        <button class="btn btn-primary">Search</button>
+      </div>
+    </div>
+
+    <ul class="movies-list list-unstyled row">
+
+    </ul>
+  </div>
+  <template class="item-temp">
+    <li class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-strech mb-3 ">
+      <div class="js-wrapper text-bg-light rounded-3 p-2 w-100 d-flex flex-column justify-content-between ">
+        <h2 class="js-title text-dark">4</h2>
+        <p class="text-dark"><strong>Runtime:</strong> <span class="js-runtime opacity-75">d</span></p>
+        <p class="text-dark"><strong>Language:</strong> <span class="js-language text-danger opacity-75">d</span></p>
+        <p class="text-dark overflow-hidden"><strong>Categories:</strong> <span class="text-primary js-categories">d</span></p>
+        <p class="text-dark"><strong>Year:</strong> <span class="js-year text-success">asdsdd</span></p>
+      </div>
+    </li>
+  </template>
+
+  <script src="./movies.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
