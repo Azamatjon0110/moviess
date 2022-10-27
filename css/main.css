@@ -1,8 +1,38 @@
+
 .input-group{
-  width: 350px;
+  width: 600px;
 }
 
-.item-img{
-  width: 100%;
-  height: 170px;
+.movie-box{
+  min-height: 400px;
+}
+
+.rating-icon::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-image: url("/images/star.svg");
+  background-position: center;
+  background-size: 20px;
+  margin-right: 10px;
+}
+
+.time-icon::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-image: url("/images/time-fast.svg");
+  background-position: center;
+  background-size: 20px;
+  margin-right: 10px;
+}
+
+.year-icon::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-image: url("/images/calendar-clock.svg");
+  background-position: center;
+  background-size: 20px;
+  margin-right: 10px;
 }
