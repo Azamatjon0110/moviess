@@ -1,6 +1,7 @@
 
 const elForm = document.querySelector(".js-form");
 const elInput = elForm.querySelector(".js-input");
+const elFormSelect = document.querySelector(".form-select");
 const elMovieList = document.querySelector(".list");
 const elMovieTemp = document.querySelector(".js-movie-template").content;
 const elMovieFragment = document.createDocumentFragment();
@@ -14,21 +15,29 @@ const modalRuntime = elModal.querySelector(".modal-runtime");
 const modalCategories = elModal.querySelector(".modal-categories");
 const modalSummary = elModal.querySelector(".modal-summary");
 const modalLink = elModal.querySelector(".modal-imdb-link");
-const moviess = movies.slice(0, 20);
+// const moviess = movies.slice(0, 20)
 
+const genres = [];
 
 function getDuration (time){
-
   const hours = Math.floor(time / 60 );
   const minuts = Math.floor(time % 60 );
   return `${hours} hrs ${minuts} min  `
-
 }
 
 function renderMovies(kino){
-
+  elMovieList.innerHTML = "";
   kino.forEach(item => {
     const elCloneMovie = elMovieTemp.cloneNode(true);
+
+    item.Categories.split("|").forEach(function(title){
+      if(!genres.includes(title)){
+        genres.push(title);
+        const selectOption = document.createElement("option");
+        selectOption.textContent = title;
+        elFormSelect.appendChild(selectOption);
+      }
+    })
 
     elCloneMovie.querySelector(".movie-img").src = `https://i3.ytimg.com/vi/${item.ytid}/mqdefault.jpg `;
     elCloneMovie.querySelector(".movie-title").textContent = item.Title;
@@ -42,7 +51,6 @@ function renderMovies(kino){
   });
 
   elMovieList.appendChild(elMovieFragment)
-
 }
 
 function renderModalInfo(topilganKino){
@@ -62,7 +70,7 @@ elMovieList.addEventListener("click",(evt)=>{
   const targetElement = evt.target
   if(targetElement.matches(".movie-btn")){
     const btnId = targetElement.dataset.id
-    const foundMovie = moviess.find(movie => movie.imdb_id === btnId);
+    const foundMovie = movies.find(movie => movie.imdb_id === btnId);
     renderModalInfo(foundMovie);
   }
 });
@@ -73,8 +81,19 @@ elModal.addEventListener("hide.bs.modal", function(){
 
 elForm.addEventListener("submit" , function(evt){
   evt.preventDefault();
+
+  const inputValue = elInput.value.trim();
+  const selectValue = elFormSelect.value.trim();
+  const regexTitle = new RegExp(inputValue, "gi");
+  const searchMovie = movies.filter (item => String(item.Title).match(regexTitle) && selectValue === item.Categories ||  String(item.Title).match(regexTitle) && selectValue === "All");
+
+  if(searchMovie.length > 0 ){
+    renderMovies(searchMovie);
+  }else{
+    elMovieList.innerHTML = "Movie not found !!!"
+  }
 });
 
 
 
-renderMovies(moviess);
+renderMovies(movies.slice(0, 16));

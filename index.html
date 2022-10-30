@@ -14,9 +14,15 @@
     <div class="d-flex align-items-center justify-content-between pt-5">
       <h2 class="fs-2 text-white">Movies</h2>
       <form method="post" class="js-form">
-      <div class="input-group">
-          <input class="form-control js-input" type="text" >
-          <button class="btn btn-primary">Search</button>
+        <div class="d-flex">
+          <div class="input-group mx-4">
+            <input class="form-control js-input" type="search" >
+            <button class="btn btn-primary">Search</button>
+          </div>
+          <select class="form-select" aria-label="Default select example me-2 d-block">
+            <option selected hidden>Open this select menu</option>
+            <option value="All">All</option>
+          </select>
         </div>
       </form>
     </div>
