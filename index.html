@@ -12,21 +12,25 @@
 
   <div class="container">
     <div class="d-flex align-items-center justify-content-between pt-5">
-      <h2 class="fs-2 text-white">Movies</h2>
+      <h2 class="fs-2 text-white me-5">Movies</h2>
       <form method="post" class="js-form">
         <div class="d-flex">
-          <div class="input-group mx-4">
-            <input class="form-control js-input" type="search" >
-            <button class="btn btn-primary">Search</button>
-          </div>
           <select class="form-select" aria-label="Default select example me-2 d-block">
             <option selected hidden>Open this select menu</option>
             <option value="All">All</option>
           </select>
+          <div class="d-flex align-items-center">
+            <input class="form-control js-input-start ms-2" min="2000" type="number" placeholder="Min year">
+            <input class="form-control js-input-end   ms-2" max="2018" type="number" placeholder="Max year">
+          </div>
+          <div class="input-group mx-2">
+            <input class="form-control js-input" type="search" placeholder="Search movie">
+            <button class="btn btn-primary">Search</button>
+          </div>
         </div>
       </form>
     </div>
-    <ul class="list list-unstyled row mt-5">
+    <ul class="list list-unstyled row mt-5 text-white">
     </ul>
   </div>
 
@@ -36,8 +40,8 @@
 
         <div class="modal-body row">
           <div class="col-5">
-            <h2 class="modal-title"></h2>
-            <iframe class="modal-iframe" width="447" height="251" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <h2 class="modal-title mb-1"></h2>
+            <iframe class="modal-iframe rounded-2" width="447" height="251" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
           <div class="col-7 d-flex flex-column justify-content-between">
             <div>
@@ -59,9 +63,9 @@
   </div>
 
   <template class="js-movie-template">
-    <li class="item col-3 mb-3">
+    <li class="item col-3 mb-3 text-black">
       <div class=" movie-box bg-white p-3 d-flex flex-column justify-content-between rounded-2">
-        <img class="movie-img mx-auto img-fluid" src="https://via.placeholder.com/150" alt="">
+        <img class="movie-img mx-auto img-fluid rounded-2" src="https://via.placeholder.com/150" alt="">
         <h4 class="movie-title">Hjshs</h4>
         <div class="d-flex justify-content-between my-2">
           <span class="movie-rating rating-icon d-inline-flex align-items-center text-success">2122</span>

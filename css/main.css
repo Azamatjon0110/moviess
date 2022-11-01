@@ -3,6 +3,10 @@
   width: 600px;
 }
 
+.form-select{
+  width: 500px;
+}
+
 .movie-box{
   min-height: 400px;
 }

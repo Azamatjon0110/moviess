@@ -1,6 +1,8 @@
 
 const elForm = document.querySelector(".js-form");
 const elInput = elForm.querySelector(".js-input");
+const elInputStart = document.querySelector(".js-input-start");
+const elInputEnd = document.querySelector(".js-input-end");
 const elFormSelect = document.querySelector(".form-select");
 const elMovieList = document.querySelector(".list");
 const elMovieTemp = document.querySelector(".js-movie-template").content;
@@ -15,9 +17,18 @@ const modalRuntime = elModal.querySelector(".modal-runtime");
 const modalCategories = elModal.querySelector(".modal-categories");
 const modalSummary = elModal.querySelector(".modal-summary");
 const modalLink = elModal.querySelector(".modal-imdb-link");
-// const moviess = movies.slice(0, 20)
-
-const genres = [];
+// const moviess = movies.slice(0, 20);
+// const cat =[]
+// movies.forEach(item => {
+//   item.Categories.split("|").forEach(function(title){
+//     if(!genres.includes(title)){
+//       genres.push(title);
+//       const selectOption = document.createElement("option");
+//       selectOption.textContent = title;
+//       elFormSelect.appendChild(selectOption);
+//     }
+//   })
+// });
 
 function getDuration (time){
   const hours = Math.floor(time / 60 );
@@ -29,16 +40,6 @@ function renderMovies(kino){
   elMovieList.innerHTML = "";
   kino.forEach(item => {
     const elCloneMovie = elMovieTemp.cloneNode(true);
-
-    item.Categories.split("|").forEach(function(title){
-      if(!genres.includes(title)){
-        genres.push(title);
-        const selectOption = document.createElement("option");
-        selectOption.textContent = title;
-        elFormSelect.appendChild(selectOption);
-      }
-    })
-
     elCloneMovie.querySelector(".movie-img").src = `https://i3.ytimg.com/vi/${item.ytid}/mqdefault.jpg `;
     elCloneMovie.querySelector(".movie-title").textContent = item.Title;
     elCloneMovie.querySelector(".movie-rating").textContent = item.imdb_rating;
@@ -47,21 +48,37 @@ function renderMovies(kino){
     elCloneMovie.querySelector(".movie-categories").textContent = item.Categories.split("|").join(", ");
     elCloneMovie.querySelector(".movie-btn").dataset.id = item.imdb_id;
     elMovieFragment.appendChild(elCloneMovie);
-
   });
-
   elMovieList.appendChild(elMovieFragment)
+};
+
+function genresFunction (genresArray){
+  const genres = [];
+  const genresFrag  = new DocumentFragment();
+  genresArray.forEach(item => {
+    item.Categories.split("|").forEach(element => {
+      if(!genres.includes(element)){
+        genres.push(element);
+      }
+    })
+  })
+  genres.forEach(function(title){
+    const selectOption = document.createElement("option");
+    selectOption.textContent = title;
+    genresFrag.appendChild(selectOption);
+    elFormSelect.appendChild(genresFrag)
+  })
 }
 
-function renderModalInfo(topilganKino){
-  modalTitle.textContent = topilganKino.Title;
-  modalIframe.src = `https://www.youtube-nocookie.com/embed/${topilganKino.ytid}`;
-  modalRating.textContent = topilganKino.imdb_rating;
-  modalYear.textContent = topilganKino.movie_year;
-  modalRuntime.textContent = getDuration(topilganKino.runtime);
-  modalCategories.textContent = topilganKino.Categories.split("|").join(", ");
-  modalSummary.textContent = topilganKino.summary;
-  modalLink.href = `https://www.imdb.com/title/${topilganKino.imdb_id}`;
+function renderModalInfo(kino){
+  modalTitle.textContent = kino.Title;
+  modalIframe.src = `https://www.youtube-nocookie.com/embed/${kino.ytid}`;
+  modalRating.textContent = kino.imdb_rating;
+  modalYear.textContent = kino.movie_year;
+  modalRuntime.textContent = getDuration(kino.runtime);
+  modalCategories.textContent = kino.Categories.split("|").join(", ");
+  modalSummary.textContent = kino.summary;
+  modalLink.href = `https://www.imdb.com/title/${kino.imdb_id}`;
 }
 
 
@@ -83,9 +100,12 @@ elForm.addEventListener("submit" , function(evt){
   evt.preventDefault();
 
   const inputValue = elInput.value.trim();
-  const selectValue = elFormSelect.value.trim();
+  const selectValue = elFormSelect.value;
+  const elInputNumberStart = Number(elInputStart.value);
+  const elInputNumberEnd = Number(elInputEnd.value);
   const regexTitle = new RegExp(inputValue, "gi");
-  const searchMovie = movies.filter (item => String(item.Title).match(regexTitle) && selectValue === item.Categories ||  String(item.Title).match(regexTitle) && selectValue === "All");
+  const regexGenres = new RegExp(elFormSelect, "gi");
+  const searchMovie = movies.filter (item => String(item.Title).match(regexTitle) && (item.Categories.match(regexGenres) || selectValue === "All") && (elInputNumberStart >= item.movie_year && elInputNumberEnd <= item.movie_year)|| (elInputNumberStart == "" && elInputNumberEnd <= item.movie_year) || (elInputNumberStart >= item.movie_year && elInputNumberEnd == "") );
 
   if(searchMovie.length > 0 ){
     renderMovies(searchMovie);
@@ -93,7 +113,5 @@ elForm.addEventListener("submit" , function(evt){
     elMovieList.innerHTML = "Movie not found !!!"
   }
 });
-
-
-
-renderMovies(movies.slice(0, 16));
+genresFunction(movies)
+renderMovies(movies.slice(0,12));
