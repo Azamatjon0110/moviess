@@ -11,17 +11,26 @@
 <body class="bg-black">
 
   <div class="container">
-    <div class="d-flex align-items-center justify-content-between pt-5">
-      <h2 class="fs-2 text-white me-5">Movies</h2>
+    <div class="mb-5 pt-5">
+      <h2 class="fs-2 text-white text-center">Movies</h2>
+    </div>
+    <div class="d-flex align-items-center justify-content-between">
       <form method="post" class="js-form">
         <div class="d-flex">
-          <select class="form-select" aria-label="Default select example me-2 d-block">
-            <option selected hidden>Open this select menu</option>
+          <select class="rounded-2 me-2 sort-select" name="sort_film" id="film-sort">
+            <option value="a-z">A-Z</option>
+            <option value="z-a">Z-A</option>
+            <option value="oldyear-newyear">Old year - New Year</option>
+            <option value="newyear-oldyear">New year - Old year</option>
+            <option value="0-10">0-10</option>
+            <option value="10-0">10-0</option>
+          </select>
+          <select class="formselect rounded-2" aria-label="Default select example me-2 d-block">
             <option value="All">All</option>
           </select>
           <div class="d-flex align-items-center">
-            <input class="form-control js-input-start ms-2" min="2000" max="2018" type="number" placeholder="Min year">
-            <input class="form-control js-input-end   ms-2" min="2000" max="2018" type="number" placeholder="Max year">
+            <input class="form-control js-input-start ms-2" min="2000" max="2018" placeholder="Min year">
+            <input class="form-control js-input-end   ms-2" min="2000" max="2018" placeholder="Max year">
           </div>
           <div class="input-group mx-2">
             <input class="form-control js-input" type="search" placeholder="Search movie">
