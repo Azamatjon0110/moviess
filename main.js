@@ -19,6 +19,11 @@ const modalCategories = elModal.querySelector(".modal-categories");
 const modalSummary = elModal.querySelector(".modal-summary");
 const modalLink = elModal.querySelector(".modal-imdb-link");
 
+const bookmarkList = document.querySelector(".bookmark-list")
+const bookmarkTemp = document.querySelector(".bookmark-template").content;
+
+const localBookmark = JSON.parse(localStorage.getItem("bookmark"));
+const bookmarkArray = localBookmark || [];
 
 function getDuration (time){
   const hours = Math.floor(time / 60 );
@@ -37,6 +42,7 @@ function renderMovies(kino){
     elCloneMovie.querySelector(".movie-runtime").textContent =  getDuration(item.runtime);
     elCloneMovie.querySelector(".movie-categories").textContent = item.Categories.split("|").join(", ");
     elCloneMovie.querySelector(".movie-btn").dataset.id = item.imdb_id;
+    elCloneMovie.querySelector(".add-bookmark").dataset.id = item.imdb_id;
     elMovieFragment.appendChild(elCloneMovie);
   });
   elMovieList.appendChild(elMovieFragment)
@@ -50,8 +56,9 @@ function genresFunction (genresArray){
       if(!genres.includes(element)){
         genres.push(element);
       }
-    })
-  })
+    });
+    genres.sort();
+  });
   genres.forEach(function(title){
     const selectOption = document.createElement("option");
     selectOption.textContent = title;
@@ -71,9 +78,9 @@ function renderModalInfo(kino){
   modalLink.href = `https://www.imdb.com/title/${kino.imdb_id}`;
 }
 
-function sortMovie(filterArray, formSelectValue){
+function sortMovie( arr,formSelectValue){
   if(formSelectValue === "a-z"){
-    movies.sort((a,b)=>{
+   arr.sort((a,b)=>{
       if (a.Title > b.Title){
         return 1
       }
@@ -85,7 +92,7 @@ function sortMovie(filterArray, formSelectValue){
     })
   };
   if(formSelectValue === "z-a"){
-    movies.sort((a,b)=>{
+   arr.sort((a,b)=>{
       if (a.Title > b.Title){
         return -1
       }
@@ -97,7 +104,7 @@ function sortMovie(filterArray, formSelectValue){
     })
   };
   if(formSelectValue === "oldyear-newyear"){
-    movies.sort((a,b)=>{
+   arr.sort((a,b)=>{
       if (a.movie_year > b.movie_year){
         return 1
       }
@@ -109,7 +116,7 @@ function sortMovie(filterArray, formSelectValue){
     })
   };
   if(formSelectValue === "newyear-oldyear"){
-    movies.sort((a,b)=>{
+   arr.sort((a,b)=>{
       if (a.movie_year > b.movie_year){
         return -1
       }
@@ -121,7 +128,7 @@ function sortMovie(filterArray, formSelectValue){
     })
   };
   if(formSelectValue === "0-10"){
-    movies.sort((a,b)=>{
+   arr.sort((a,b)=>{
       if (a.imdb_rating > b.imdb_rating){
         return 1
       }
@@ -133,7 +140,7 @@ function sortMovie(filterArray, formSelectValue){
     })
   };
   if(formSelectValue === "10-0"){
-    movies.sort((a,b)=>{
+   arr.sort((a,b)=>{
       if (a.imdb_rating > b.imdb_rating){
         return -1
       }
@@ -147,6 +154,21 @@ function sortMovie(filterArray, formSelectValue){
 }
 
 
+function addBookmark (arr,list){
+  list.innerHTML = null;
+  const frag = new DocumentFragment();
+  arr.forEach(item => {
+    const template = bookmarkTemp.cloneNode(true);
+    template.querySelector(".movie-img").src = `https://i3.ytimg.com/vi/${item.ytid}/mqdefault.jpg `;
+    template.querySelector(".movie-title").textContent = item.Title;
+    template.querySelector(".delete-btn").dataset.id = item.imdb_id;
+    frag.appendChild(template);
+  });
+  window.localStorage.setItem("bookmark", JSON.stringify(bookmarkArray))
+  list.appendChild(frag);
+};
+
+addBookmark(bookmarkArray,bookmarkList)
 // event delegation
 elMovieList.addEventListener("click",(evt)=>{
   const targetElement = evt.target
@@ -154,6 +176,15 @@ elMovieList.addEventListener("click",(evt)=>{
     const btnId = targetElement.dataset.id
     const foundMovie = movies.find(movie => movie.imdb_id === btnId);
     renderModalInfo(foundMovie);
+  }
+  if(targetElement.matches(".add-bookmark")){
+    const addBtnId = targetElement.dataset.id;
+    const addObj =  movies.find(item => item.imdb_id === addBtnId);
+    if(!bookmarkArray.includes(addObj)){
+      bookmarkArray.push(addObj);
+    }
+    window.localStorage.setItem("bookmark", JSON.stringify(bookmarkArray));
+    addBookmark(bookmarkArray,bookmarkList);
   }
 });
 
@@ -166,6 +197,7 @@ function filterArray(inVal, selcVal ){
     return (item.Title.toString().match(inVal)) && (selcVal == "All" ||  item.Categories.includes(selcVal)) && (elInputStart.value == "" || item.movie_year >= Number(elInputStart.value)) && (elInputEnd.value == "" || item.movie_year <= Number(elInputEnd.value))});
 }
 
+
 elForm.addEventListener("submit" , function(evt){
   evt.preventDefault();
 
@@ -173,7 +205,6 @@ elForm.addEventListener("submit" , function(evt){
   const selectValue = elFormSelect.value;
   const regexTitle = new RegExp(inputValue, "gi");
   const searchMovie = filterArray(regexTitle, selectValue);
-
 
   if(searchMovie.length > 0 ){
     sortMovie(searchMovie,elSortSelect.value)
@@ -183,5 +214,17 @@ elForm.addEventListener("submit" , function(evt){
     elMovieList.innerHTML = "Movie not found !!!"
   }
 });
+
+bookmarkList.addEventListener("click", function(evt){
+  evt.preventDefault();
+  if(evt.target.matches(".delete-btn")){
+    const delBtnId = evt.target.dataset.id;
+    const delMovie = bookmarkArray.find(item => item.imdb_id === delBtnId);
+    bookmarkArray.splice(delMovie,1);
+    window.localStorage.setItem("bookmark", JSON.stringify(bookmarkArray))
+    addBookmark(bookmarkArray,bookmarkList);
+  }
+})
+
 genresFunction(movies)
 renderMovies(movies.slice(0,12));

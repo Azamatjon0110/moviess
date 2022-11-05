@@ -40,3 +40,9 @@
   background-size: 20px;
   margin-right: 10px;
 }
+
+.offcanvas-btn{
+  position: absolute;
+  top:50px;
+  right: 0;
+}
